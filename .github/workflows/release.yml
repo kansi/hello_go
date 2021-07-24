@@ -34,6 +34,7 @@ jobs:
         cd rubin
         mix local.rebar --force
         mix local.hex --force
+        mix deps.get
         mix release --overwrite
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
