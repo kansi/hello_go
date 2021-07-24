@@ -39,5 +39,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: release
-        path: _build/prod/rubin-*.tar.gz
+        path: rubin/_build/prod/rubin-*.tar.gz
         retention-days: 30
