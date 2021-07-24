@@ -15,7 +15,7 @@ defmodule Rubin.Application do
         restart: :transient
       )
 
-    Logger.info("running server #{go_server_spec}")
+    Logger.info("running server #{inspect(go_server_spec)}")
 
     children = [
       go_server_spec
