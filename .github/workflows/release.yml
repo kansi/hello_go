@@ -1,0 +1,43 @@
+name: Release CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  MIX_ENV: prod
+
+jobs:
+  build:
+    name: Build and release
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        stable: 'false'
+        go-version: '1.16.5'
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.11.4' # Define the elixir version [required]
+        otp-version: '23.0' # Define the OTP version [required]
+    - name: Build server
+      run: |
+        cd hello && go build server.go && cd ..
+        cp hello/server rubin/priv
+    - name: Package server
+      run: |
+        cd rubin
+        mix local.rebar --force
+        mix local.hex --force
+        mix release --overwrite
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release
+        path: _build/prod/rubin-*.tar.gz
+        retention-days: 30
